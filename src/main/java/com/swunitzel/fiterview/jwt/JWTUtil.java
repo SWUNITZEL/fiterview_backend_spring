@@ -35,7 +35,9 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public String createJwt(String category, String email, Long expiredMs) {
+    public String createJwt(String category, String email) {
+
+        Long expiredMs  = category.equals("access") ? 600000L : 86400000L;
 
         return Jwts.builder()
                 .claim("category", category)

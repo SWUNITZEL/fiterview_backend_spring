@@ -1,7 +1,10 @@
 package com.swunitzel.fiterview.services;
 
 import com.swunitzel.fiterview.domain.User;
+import com.swunitzel.fiterview.domain.enums.Gender;
 import com.swunitzel.fiterview.dto.JoinDto;
+import com.swunitzel.fiterview.dto.TokenPairsDto;
+import com.swunitzel.fiterview.jwt.JWTUtil;
 import com.swunitzel.fiterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,24 +16,43 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JWTUtil jwtUtil;
 
+    // 회원가입
     public void join(JoinDto joinDTO) {
-
-        String email = joinDTO.getEmail();
-        String password = joinDTO.getPassword();
-
-        Boolean isExist = userRepository.existsByEmail(email);
-
-        if (isExist) {
+        if (userRepository.existsByEmail(joinDTO.getEmail())) {
             throw new IllegalArgumentException("email already exist");
         }
 
-        User data = new User();
+        User user = new User(joinDTO);
 
-        data.setEmail(email);
-        data.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(user);
+    }
 
-        userRepository.save(data);
+    public Boolean validateRefreshToken(String refresh) {
+        jwtUtil.isExpired(refresh);
+        if (!jwtUtil.getCategory(refresh).equals("refresh")) {
+
+            throw new IllegalArgumentException("is not refresh token");
+        }
+        return true;
+    }
+
+
+    // refresh 토큰 갱신
+    public TokenPairsDto reissueToken(String refresh) {
+
+        User user = userRepository.findByEmail(jwtUtil.getEmail(refresh));
+        if (user == null || !user.getRefresh().equals(refresh)) {
+            System.out.println(user == null);
+            System.out.println(user.getRefresh().equals(refresh));
+            throw new RuntimeException();
+        }
+
+        String newAccessToken = jwtUtil.createJwt("access", jwtUtil.getEmail(refresh));
+
+        return new TokenPairsDto(newAccessToken, refresh);
+
     }
 
 }

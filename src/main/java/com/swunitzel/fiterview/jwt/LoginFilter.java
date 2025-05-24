@@ -2,13 +2,12 @@ package com.swunitzel.fiterview.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swunitzel.fiterview.domain.User;
-import com.swunitzel.fiterview.dto.JoinDto;
+import com.swunitzel.fiterview.dto.LoginDto;
+import com.swunitzel.fiterview.dto.TokenPairsDto;
 import com.swunitzel.fiterview.repository.UserRepository;
-import com.swunitzel.fiterview.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,11 +39,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JoinDto joinDto = objectMapper.readValue(request.getInputStream(), JoinDto.class);
+            LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
 
             //클라이언트 요청에서 username, password 추출
-            String email = joinDto.getEmail();
-            String password = joinDto.getPassword();
+            String email = loginDto.getEmail();
+            String password = loginDto.getPassword();
 
             //스프링 시큐리티에서 username과 password를 검증
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
@@ -68,18 +67,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-
-        String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", email, 86400000L);
+        String access = jwtUtil.createJwt("access", email);
+        String refresh = jwtUtil.createJwt("refresh", email);
 
         //응답 설정
         response.setHeader("access", access);
+        response.setHeader("refresh", refresh);
         if (saveRefresh(email, refresh)){
-            response.setStatus(HttpStatus.OK.value());
+            try{
+                // DTO 생성 및 JSON 직렬화
+                TokenPairsDto tokenPair = new TokenPairsDto(access, refresh);
+                String jsonResponse = new ObjectMapper().writeValueAsString(tokenPair);
+
+                response.getWriter().write(jsonResponse);
+                response.setStatus(HttpStatus.OK.value());
+            } catch (IOException e) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+            }
         }
         else {
             response.setStatus(HttpStatus.FORBIDDEN.value());
