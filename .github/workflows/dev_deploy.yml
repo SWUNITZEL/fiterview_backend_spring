@@ -64,6 +64,6 @@ jobs:
             
             sudo docker pull ${{ env.DOCKER_IMAGE_NAME }}
             sudo docker run -d -p 8080:8080 \
-              -e MONGO_DB_URL="${{ secrets.MONGO_DB_URL }}" \
+              -e MONGODB_URL="${{ secrets.MONGO_DB_URL }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET_KEY }}" \
               --name ${{ env.CONTAINER_NAME }} ${{ env.DOCKER_IMAGE_NAME }}:latest
