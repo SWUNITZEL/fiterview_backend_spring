@@ -6,7 +6,7 @@ on:
       - develop
 
 env:
-  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/springboot
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/springboot
   EC2_HOST: ${{ secrets.EC2_HOST }}
   EC2_SSH_USER: ubuntu
   PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
