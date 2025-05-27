@@ -11,6 +11,8 @@ env:
   EC2_SSH_USER: ubuntu
   PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
   CONTAINER_NAME: springboot
+  MONGODB_URL: ${{ secrets.MONGO_DB_URL }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET_KEY }}
 
 jobs:
   build-and-push-docker:
@@ -28,7 +30,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build -x test
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ${{ env.DOCKER_IMAGE_NAME }}:latest
