@@ -24,6 +24,8 @@ public class UserService {
             throw new IllegalArgumentException("email already exist");
         }
 
+        // 비밀번호 인코딩
+        joinDTO.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
         User user = new User(joinDTO);
 
         userRepository.save(user);
