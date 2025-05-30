@@ -44,7 +44,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             //클라이언트 요청에서 username, password 추출
             String email = loginDto.getEmail();
             String password = loginDto.getPassword();
-
+            System.out.println("LoginFilter: attemptAuthentication");
+            System.out.println("email: " + email);
             //스프링 시큐리티에서 username과 password를 검증
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
 
