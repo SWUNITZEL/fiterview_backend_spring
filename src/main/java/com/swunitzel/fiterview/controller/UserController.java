@@ -2,11 +2,14 @@ package com.swunitzel.fiterview.controller;
 
 import com.swunitzel.fiterview.dto.JoinDto;
 import com.swunitzel.fiterview.dto.TokenPairsDto;
+import com.swunitzel.fiterview.dto.UserDto;
+import com.swunitzel.fiterview.jwt.CustomUserDetails;
 import com.swunitzel.fiterview.services.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,6 +60,20 @@ public class UserController {
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("ok");
+    }
+
+    @GetMapping("/navigation_data")
+    public ResponseEntity<?> getUserData(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            UserDto userDto = userService.getUserData(userDetails.getUsername());
+            return ResponseEntity.ok(userDto);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>("document is null", HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("user is null", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body( e.getMessage());
+        }
     }
 
 

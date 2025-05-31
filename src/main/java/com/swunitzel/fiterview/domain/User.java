@@ -32,6 +32,8 @@ public class User extends BaseEntity {
 
     private String refresh;
 
+    private String profileImg;
+
     public  User(JoinDto joinDto) {
         this.email = joinDto.getEmail();
         this.password = joinDto.getPassword();

@@ -1,9 +1,11 @@
 package com.swunitzel.fiterview.services;
 
+import com.swunitzel.fiterview.domain.SchoolRecord;
 import com.swunitzel.fiterview.domain.User;
 import com.swunitzel.fiterview.domain.enums.Gender;
 import com.swunitzel.fiterview.dto.JoinDto;
 import com.swunitzel.fiterview.dto.TokenPairsDto;
+import com.swunitzel.fiterview.dto.UserDto;
 import com.swunitzel.fiterview.jwt.JWTUtil;
 import com.swunitzel.fiterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
+    private final SchoolRecordService schoolRecordService;
 
     // 회원가입
     public void join(JoinDto joinDTO) {
@@ -55,6 +58,18 @@ public class UserService {
 
         return new TokenPairsDto(newAccessToken, refresh);
 
+    }
+
+    public UserDto getUserData(String email) {
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException();
+        }
+
+        String schoolRecordId = schoolRecordService.getSchoolRecordId(email);
+
+        return new UserDto(user.getName(), user.getEmail(), user.getProfileImg(), schoolRecordId  );
     }
 
 }
