@@ -67,8 +67,6 @@ public class UserController {
         try {
             UserDto userDto = userService.getUserData(userDetails.getUsername());
             return ResponseEntity.ok(userDto);
-        } catch (IllegalArgumentException e){
-            return new ResponseEntity<>("document is null", HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             return new ResponseEntity<>("user is null", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

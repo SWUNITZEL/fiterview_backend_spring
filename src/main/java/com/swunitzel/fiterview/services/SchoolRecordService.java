@@ -15,7 +15,7 @@ public class SchoolRecordService {
         SchoolRecord schoolRecord = schoolRecordRepository.findByUserEmail(user_email);
 
         if (schoolRecord == null) {
-            throw new IllegalArgumentException("생활기록부가 존재하지 않음" );
+            return null;
         }
 
         return schoolRecord.getId();
