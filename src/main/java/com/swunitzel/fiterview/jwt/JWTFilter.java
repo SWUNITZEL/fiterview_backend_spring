@@ -51,7 +51,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             //response status code
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("access token expired");
             return;
         } catch (IllegalArgumentException e) {
             PrintWriter writer = response.getWriter();
@@ -59,7 +58,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             //response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("token null or empty");
             return;
         } catch (Exception e) {
             System.out.println("JWT 검증 실패: " + e);
