@@ -26,7 +26,7 @@ public class ReportService {
 
         // 영상 분석 결과 지표 합계
         float totalPostureScore = 0f;
-        float totalSmileRatio = 0f;
+        float totalSmileScore = 0f;
         int totalGazeDownScore = 0;
 
         // 자세 측정 카운드
@@ -39,7 +39,7 @@ public class ReportService {
                     answer.getShoulderTiltCount(),
                     answer.getTurnLeftCount(),
                     answer.getTurnRightCount());
-            totalSmileRatio += answer.getSmileRatio();
+            totalSmileScore += scoreSmile(answer.getSmileRatio());
             totalGazeDownScore += scoreGaze(answer.getGazeDownCount());
             totalShoulderTiltCount += answer.getShoulderTiltCount();
             totalTurnLeftCount += answer.getTurnLeftCount();
@@ -49,7 +49,7 @@ public class ReportService {
         int answerCount = answers.size();
 
         float avgPostureScore = totalPostureScore / answerCount;
-        float avgFacialScore = ( totalSmileRatio / answerCount ) * 100;
+        float avgFacialScore = totalSmileScore / answerCount;
         float avgGazeScore = totalGazeDownScore / answerCount;
         float avgShoulderTiltCount = totalShoulderTiltCount / answerCount;
         float avgTurnLeftCount = totalTurnLeftCount / answerCount;
@@ -85,5 +85,15 @@ public class ReportService {
         int weightedSum = shoulderTilt * 2 + turnLeft + turnRight;
 
         return 100f - weightedSum * 1.5f;
+    }
+
+    float scoreSmile(float smilRatio) {
+        if (smilRatio >= 0.5f) {
+            return 90 + (smilRatio - 0.5f) * 20;  // 90~100점
+        } else if (smilRatio >= 0.3f) {
+            return 70 + (smilRatio - 0.3f) * 100; // 70~89점
+        } else {
+            return 50 * smilRatio / 0.3f;         // 0~50점
+        }
     }
 }
