@@ -18,6 +18,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 생활기록부 오류
     _SCHOOL_RECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHOOL-RECORD403", "사용자의 생활기록부 분석 정보가 존재하지 않습니다"),
 
+    // 인터뷰 관련 오류
+    _INTERVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW404", "인터뷰를 찾을 수 없습니다"),
+
     ;
 
     private final HttpStatus httpStatus;
