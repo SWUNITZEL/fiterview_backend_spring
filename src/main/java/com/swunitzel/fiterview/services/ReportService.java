@@ -49,7 +49,7 @@ public class ReportService {
         int answerCount = answers.size();
 
         float avgPostureScore = totalPostureScore / answerCount;
-        float avgFacialScore = totalSmileRatio / answerCount;
+        float avgFacialScore = ( totalSmileRatio / answerCount ) * 100;
         float avgGazeScore = totalGazeDownScore / answerCount;
         float avgShoulderTiltCount = totalShoulderTiltCount / answerCount;
         float avgTurnLeftCount = totalTurnLeftCount / answerCount;
