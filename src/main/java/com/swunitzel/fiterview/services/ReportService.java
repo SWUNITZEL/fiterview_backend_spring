@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,12 +56,16 @@ public class ReportService {
         float avgTurnLeftCount = totalTurnLeftCount / answerCount;
         float avgTurnRightCount = totalTurnRightCount / answerCount;
 
+        List<List<Integer>> gazePointsList = answers.stream()
+                .map(Answer::getGazePoints)
+                .collect(Collectors.toList());
+
         // 인터뷰에 총첨 업데이트
         Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus._INTERVIEW_NOT_FOUND));
 
         Interview updatedInterview = interview.updateTotalScore(avgPostureScore, avgFacialScore, avgGazeScore,
-                avgShoulderTiltCount, avgTurnLeftCount, avgTurnRightCount);
+                avgShoulderTiltCount, avgTurnLeftCount, avgTurnRightCount, gazePointsList);
 
         return ReportConverter.toDto(updatedInterview);
     }

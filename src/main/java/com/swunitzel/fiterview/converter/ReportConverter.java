@@ -11,6 +11,7 @@ public class ReportConverter {
                 .avgShoulderTiltCount(interview.getAvgShoulderTiltCount())
                 .avgTurnLeftCount(interview.getAvgTurnLeftCount())
                 .avgTurnRightCount(interview.getAvgTurnRightCount())
+                .gazePointList(interview.getGazePointsList())
                 .build();
     }
 
