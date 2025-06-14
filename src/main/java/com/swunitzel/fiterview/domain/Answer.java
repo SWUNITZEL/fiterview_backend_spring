@@ -45,6 +45,9 @@ public class Answer {
     @Field("gaze_points")
     private String gazePoints;
 
+    @Field("blinks_per_minute")
+    private float blinksPerMinute;
+
     @Field("shoulder_tilt_count")
     private int shoulderTiltCount;
 
