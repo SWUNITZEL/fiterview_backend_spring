@@ -21,6 +21,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 인터뷰 관련 오류
     _INTERVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW404", "인터뷰를 찾을 수 없습니다"),
 
+    // answer 관련 오류
+    _ANSWER_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW404", "답변을 찾을 수 없습니다"),
+
     ;
 
     private final HttpStatus httpStatus;

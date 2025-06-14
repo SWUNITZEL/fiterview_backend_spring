@@ -1,6 +1,7 @@
 package com.swunitzel.fiterview.services;
 
 import com.swunitzel.fiterview.apiPayload.code.status.ErrorStatus;
+import com.swunitzel.fiterview.apiPayload.exception.handler.AnswerHandler;
 import com.swunitzel.fiterview.apiPayload.exception.handler.InterviewHandler;
 import com.swunitzel.fiterview.converter.ReportConverter;
 import com.swunitzel.fiterview.domain.Answer;
@@ -24,6 +25,10 @@ public class ReportService {
     public ReportDto.NonverbalCommunicationReportDto getNonverbalCommunicationReport(String interviewId) {
 
         List<Answer> answers = answerRepository.findAllByInterviewId(interviewId);
+
+        if (answers == null) {
+            throw new AnswerHandler(ErrorStatus._ANSWER_NOT_FOUND);
+        }
 
         // 영상 분석 결과 지표 합계
         float totalPostureScore = 0f;
