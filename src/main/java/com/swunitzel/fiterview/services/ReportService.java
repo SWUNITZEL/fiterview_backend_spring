@@ -27,7 +27,7 @@ public class ReportService {
         // 영상 분석 결과 지표 합계
         float totalPostureScore = 0f;
         float totalSmileScore = 0f;
-        int totalGazeDownScore = 0;
+        int totalGazeScore = 0;
 
         // 자세 측정 카운드
         int totalShoulderTiltCount = 0;
@@ -40,7 +40,7 @@ public class ReportService {
                     answer.getTurnLeftCount(),
                     answer.getTurnRightCount());
             totalSmileScore += scoreSmile(answer.getSmileRatio());
-            totalGazeDownScore += scoreGaze(answer.getGazeDownCount());
+            totalGazeScore += scoreGaze(answer.getGazeDownCount(), answer.getBlinksPerMinute());
             totalShoulderTiltCount += answer.getShoulderTiltCount();
             totalTurnLeftCount += answer.getTurnLeftCount();
             totalTurnRightCount += answer.getTurnRightCount();
@@ -50,7 +50,7 @@ public class ReportService {
 
         float avgPostureScore = totalPostureScore / answerCount;
         float avgFacialScore = totalSmileScore / answerCount;
-        float avgGazeScore = totalGazeDownScore / answerCount;
+        float avgGazeScore = totalGazeScore / answerCount;
         float avgShoulderTiltCount = totalShoulderTiltCount / answerCount;
         float avgTurnLeftCount = totalTurnLeftCount / answerCount;
         float avgTurnRightCount = totalTurnRightCount / answerCount;
@@ -65,18 +65,29 @@ public class ReportService {
         return ReportConverter.toDto(updatedInterview);
     }
 
-    int scoreGaze(int downCount) {
+    float scoreGaze(int downCount, float blinksPerMinute) {
+        int gazeScore;
+
         if (downCount <= 3) {
-            return 100;
+            gazeScore = 100;
         } else if (downCount <= 6) {
-            return 90;
+            gazeScore = 90;
         } else if (downCount <= 10) {
-            return 80;
+            gazeScore = 80;
         } else if (downCount <= 15) {
-            return 70;
+            gazeScore = 70;
         } else {
-            return 60;
+            gazeScore = 60;
         }
+
+        float penalty = 0;
+        if (blinksPerMinute < 10) {
+            penalty = (10 - blinksPerMinute) * 2;  // 너무 적은 경우 감점
+        } else if (blinksPerMinute > 20) {
+            penalty = (blinksPerMinute - 20) * 2;  // 너무 많은 경우 감점
+        }
+
+        return Math.max(0, gazeScore - penalty);
     }
 
     float scorePosture(int shoulderTilt, int turnLeft, int turnRight) {
