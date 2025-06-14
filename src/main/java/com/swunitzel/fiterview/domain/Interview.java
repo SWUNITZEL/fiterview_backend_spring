@@ -2,8 +2,10 @@ package com.swunitzel.fiterview.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import java.util.List;
 
 @Document(collection = "interview")
 @Getter
@@ -33,14 +35,18 @@ public class Interview {
     @Field("avg_turn_right_count")
     private float avgTurnRightCount;
 
+    @Field("gaze_points_list")
+    private List<List<List<Integer>>> gazePointsList;
+
     public Interview updateTotalScore(float avgPostureScore, float avgFacialScore, float avgGazeScore,
-                                      float avgShoulderTiltCount, float avgTurnLeftCount, float avgTurnRightCount) {
+                                      float avgShoulderTiltCount, float avgTurnLeftCount, float avgTurnRightCount, List<List<List<Integer>>> gazePointsList) {
         this.avgPostureScore = avgPostureScore;
         this.avgFacialScore = avgFacialScore;
         this.avgGazeScore = avgGazeScore;
         this.avgShoulderTiltCount = avgShoulderTiltCount;
         this.avgTurnLeftCount = avgTurnLeftCount;
         this.avgTurnRightCount = avgTurnRightCount;
+        this.gazePointsList = gazePointsList;
         return this;
     }
 }

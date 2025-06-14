@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 public class ReportDto {
 
     @Builder
@@ -27,6 +29,7 @@ public class ReportDto {
         private float avgShoulderTiltCount;
         private float avgTurnLeftCount;
         private float avgTurnRightCount;
+        private List<List<List<Integer>>> gazePointList;
 
     }
 }
