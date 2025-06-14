@@ -29,7 +29,7 @@ public class ReportDto {
         private float avgShoulderTiltCount;
         private float avgTurnLeftCount;
         private float avgTurnRightCount;
-        private List<List<Integer>> gazePointList;
+        private List<List<List<Integer>>> gazePointList;
 
     }
 }

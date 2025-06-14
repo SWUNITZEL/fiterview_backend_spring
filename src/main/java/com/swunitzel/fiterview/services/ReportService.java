@@ -56,7 +56,7 @@ public class ReportService {
         float avgTurnLeftCount = totalTurnLeftCount / answerCount;
         float avgTurnRightCount = totalTurnRightCount / answerCount;
 
-        List<List<Integer>> gazePointsList = answers.stream()
+        List<List<List<Integer>>> gazePointsList = answers.stream()
                 .map(Answer::getGazePoints)
                 .collect(Collectors.toList());
 

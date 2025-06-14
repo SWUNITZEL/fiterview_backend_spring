@@ -45,7 +45,7 @@ public class Answer {
     private int gazeDownCount;
 
     @Field("gaze_points")
-    private List<Integer> gazePoints;
+    private List<List<Integer>> gazePoints;
 
     @Field("blinks_per_minute")
     private float blinksPerMinute;

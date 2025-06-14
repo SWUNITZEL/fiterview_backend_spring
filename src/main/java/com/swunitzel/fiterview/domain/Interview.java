@@ -36,10 +36,10 @@ public class Interview {
     private float avgTurnRightCount;
 
     @Field("gaze_points_list")
-    private List<List<Integer>> gazePointsList;
+    private List<List<List<Integer>>> gazePointsList;
 
     public Interview updateTotalScore(float avgPostureScore, float avgFacialScore, float avgGazeScore,
-                                      float avgShoulderTiltCount, float avgTurnLeftCount, float avgTurnRightCount, List<List<Integer>> gazePointsList) {
+                                      float avgShoulderTiltCount, float avgTurnLeftCount, float avgTurnRightCount, List<List<List<Integer>>> gazePointsList) {
         this.avgPostureScore = avgPostureScore;
         this.avgFacialScore = avgFacialScore;
         this.avgGazeScore = avgGazeScore;
