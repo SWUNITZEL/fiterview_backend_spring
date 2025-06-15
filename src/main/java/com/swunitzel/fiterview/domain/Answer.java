@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Document(collection = "answers")
@@ -22,8 +23,6 @@ public class Answer {
 
     @Field("question_id")
     private String questionId;
-
-    private String keyword;
 
     private String answer;
 
@@ -67,4 +66,13 @@ public class Answer {
 
     @Field("pitch_mean")
     private float pitchMean;
+
+    @Field("frequently_used_words")
+    private List<Object> frequentlyUsedWords;
+
+    @Field("hesitant_list")
+    private List<String> hesitantList;
+
+    @Field("hesitant_score")
+    private int hesitantScore;
 }

@@ -11,8 +11,10 @@ import com.swunitzel.fiterview.repository.AnswerRepository;
 import com.swunitzel.fiterview.repository.InterviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +24,8 @@ public class ReportService {
     private final AnswerRepository answerRepository;
     private final InterviewRepository interviewRepository;
 
+    // 비언어적 커뮤니케이션 분석 결과 보고서
+    @Transactional
     public ReportDto.NonverbalCommunicationReportDto getNonverbalCommunicationReport(String interviewId) {
 
         List<Answer> answers = answerRepository.findAllByInterviewId(interviewId);
@@ -69,10 +73,10 @@ public class ReportService {
         Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus._INTERVIEW_NOT_FOUND));
 
-        Interview updatedInterview = interview.updateTotalScore(avgPostureScore, avgFacialScore, avgGazeScore,
+        Interview updatedInterview = interview.updateNonverbalCommunicationReport(avgPostureScore, avgFacialScore, avgGazeScore,
                 avgShoulderTiltCount, avgTurnLeftCount, avgTurnRightCount, gazePointsList);
 
-        return ReportConverter.toDto(updatedInterview);
+        return ReportConverter.toNonverbalCommunicationReportDto(updatedInterview);
     }
 
     float scoreGaze(int downCount, float blinksPerMinute) {
@@ -117,4 +121,72 @@ public class ReportService {
             return 50 * smilRatio / 0.3f;         // 0~50점
         }
     }
+
+    // 어휘 분석 결과
+    @Transactional
+    public ReportDto.TransmissionReportDto getTransmissionReport(String interviewId) {
+
+        List<Answer> answers = answerRepository.findAllByInterviewId(interviewId);
+
+        if (answers == null) {
+            throw new AnswerHandler(ErrorStatus._ANSWER_NOT_FOUND);
+        }
+
+        // 어휘 분석 결과 점수 합계
+        float totalHesitantScore = 0f;
+        float totalPitchScore = 0f;
+        int totalSpeedScore = 0;
+
+        for (Answer answer : answers) {
+            totalHesitantScore += answer.getHesitantScore();
+            totalPitchScore += getPitchScore(answer.getPitchMean());
+            totalSpeedScore += getSpeedScore(answer.getSpeakingSpeed());
+        }
+
+        int answerCount = answers.size();
+
+        float avgHesitantScore = totalHesitantScore / answerCount;
+        float avgPitchScore = totalPitchScore / answerCount;
+        float avgSpeedScore = totalSpeedScore / answerCount;
+        
+        List<List<Object>> frequentlyUsedWords = answers.stream()
+                .map(Answer::getFrequentlyUsedWords)
+                .collect(Collectors.toList());
+
+        List<List<String>> hesitantList = answers.stream()
+                .map(Answer::getHesitantList)
+                .collect(Collectors.toList());
+
+        // 인터뷰에 총첨 업데이트
+        Interview interview = interviewRepository.findById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus._INTERVIEW_NOT_FOUND));
+
+        Interview updatedInterview = interview.updateTransmissionReport(avgHesitantScore, avgPitchScore, avgSpeedScore,
+                frequentlyUsedWords, hesitantList);
+
+        return ReportConverter.toTransmissionReportDto(updatedInterview);
+    }
+
+    // 톤 점수 계산
+    public static int getPitchScore(float pitchMean) {
+        if (pitchMean >= 85 && pitchMean <= 180) {
+            return 100;
+        } else if ((pitchMean >= 70 && pitchMean < 85) || (pitchMean > 180 && pitchMean <= 210)) {
+            return 80;
+        } else {
+            return 60;
+        }
+    }
+
+    // 속도 점수 계산
+    public static int getSpeedScore(float speakingSpeed) {
+        if (speakingSpeed >= 3.0 && speakingSpeed <= 4.5) {
+            return 100;
+        } else if ((speakingSpeed >= 2.0 && speakingSpeed < 3.0) || (speakingSpeed > 4.5 && speakingSpeed <= 6.0)) {
+            return 80;
+        } else {
+            return 60;
+        }
+    }
+
 }
