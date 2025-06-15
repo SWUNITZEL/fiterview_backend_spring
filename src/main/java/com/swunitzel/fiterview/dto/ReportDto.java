@@ -32,4 +32,25 @@ public class ReportDto {
         private List<List<List<Integer>>> gazePointList;
 
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TransmissionReportTotalScoreDto{
+        private float avgHesitantScore;
+        private float avgPitchScore;
+        private float avgSpeedScore;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TransmissionReportDto{
+        private TransmissionReportTotalScoreDto totalScore;
+        private List<List<Object>> frequentlyUsedWords;
+        private List<List<String>> hesitantList;
+
+    }
 }

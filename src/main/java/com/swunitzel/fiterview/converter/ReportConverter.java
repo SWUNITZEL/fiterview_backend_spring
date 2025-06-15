@@ -5,9 +5,9 @@ import com.swunitzel.fiterview.dto.ReportDto;
 
 public class ReportConverter {
 
-    public static ReportDto.NonverbalCommunicationReportDto toDto(Interview interview) {
+    public static ReportDto.NonverbalCommunicationReportDto toNonverbalCommunicationReportDto(Interview interview) {
         return ReportDto.NonverbalCommunicationReportDto.builder()
-                .totalScore(toTotalScoreDto(interview))
+                .totalScore(toNonverbalCommunicationReportTotalScoreDto(interview))
                 .avgShoulderTiltCount(interview.getAvgShoulderTiltCount())
                 .avgTurnLeftCount(interview.getAvgTurnLeftCount())
                 .avgTurnRightCount(interview.getAvgTurnRightCount())
@@ -15,11 +15,27 @@ public class ReportConverter {
                 .build();
     }
 
-    public static ReportDto.NonverbalCommunicationReportTotalScoreDto toTotalScoreDto(Interview interview) {
+    public static ReportDto.NonverbalCommunicationReportTotalScoreDto toNonverbalCommunicationReportTotalScoreDto(Interview interview) {
         return ReportDto.NonverbalCommunicationReportTotalScoreDto.builder()
                 .avgPostureScore(interview.getAvgPostureScore())
                 .avgFacialScore(interview.getAvgFacialScore())
                 .avgGazeScore(interview.getAvgGazeScore())
+                .build();
+    }
+
+    public static ReportDto.TransmissionReportDto toTransmissionReportDto(Interview interview) {
+        return ReportDto.TransmissionReportDto.builder()
+                .totalScore(toTransmissionReportTotalScoreDto(interview))
+                .frequentlyUsedWords(interview.getFrequentlyUsedWords())
+                .hesitantList(interview.getHesitantList())
+                .build();
+    }
+
+    public static ReportDto.TransmissionReportTotalScoreDto toTransmissionReportTotalScoreDto(Interview interview) {
+        return ReportDto.TransmissionReportTotalScoreDto.builder()
+                .avgHesitantScore(interview.getAvgHesitantScore())
+                .avgPitchScore(interview.getAvgPitchScore())
+                .avgSpeedScore(interview.getAvgSpeedScore())
                 .build();
     }
 }
