@@ -37,7 +37,7 @@ public class JWTUtil {
 
     public String createJwt(String category, String email) {
 
-        Long expiredMs  = category.equals("access") ? 600000L : 86400000L;
+        Long expiredMs  = category.equals("access") ? 7200000L : 86400000L;
 
         return Jwts.builder()
                 .claim("category", category)
