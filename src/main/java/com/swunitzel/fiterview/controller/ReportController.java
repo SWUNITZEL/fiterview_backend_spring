@@ -13,9 +13,9 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("/{interviewId}/nonverbal-communication")
-    public ApiResponse<ReportDto.NonverbalCommunicationReportDto> getNonVerbalCommunicationReport(@PathVariable(name = "interviewId") String interviewId) {
-        ReportDto.NonverbalCommunicationReportDto reportDto = reportService.getNonverbalCommunicationReport(interviewId);
+    @PostMapping("/nonverbal-communication")
+    public ApiResponse<ReportDto.NonverbalCommunicationReportDto> getNonVerbalCommunicationReport() {
+        ReportDto.NonverbalCommunicationReportDto reportDto = reportService.getNonverbalCommunicationReport("684ff89b83a23a43d1d4ace4");
         return ApiResponse.onSuccess(reportDto);
     }
 

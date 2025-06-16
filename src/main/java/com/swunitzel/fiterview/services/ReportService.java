@@ -2,19 +2,21 @@ package com.swunitzel.fiterview.services;
 
 import com.swunitzel.fiterview.apiPayload.code.status.ErrorStatus;
 import com.swunitzel.fiterview.apiPayload.exception.handler.AnswerHandler;
+import com.swunitzel.fiterview.apiPayload.exception.handler.CombineHandler;
 import com.swunitzel.fiterview.apiPayload.exception.handler.InterviewHandler;
 import com.swunitzel.fiterview.converter.ReportConverter;
 import com.swunitzel.fiterview.domain.Answer;
+import com.swunitzel.fiterview.domain.Combine;
 import com.swunitzel.fiterview.domain.Interview;
 import com.swunitzel.fiterview.dto.ReportDto;
 import com.swunitzel.fiterview.repository.AnswerRepository;
+import com.swunitzel.fiterview.repository.CombineRepository;
 import com.swunitzel.fiterview.repository.InterviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +25,7 @@ public class ReportService {
 
     private final AnswerRepository answerRepository;
     private final InterviewRepository interviewRepository;
+    private final CombineRepository combineRepository;
 
     // 비언어적 커뮤니케이션 분석 결과 보고서
     @Transactional
@@ -45,17 +48,29 @@ public class ReportService {
         int totalTurnRightCount = 0;
 
         for (Answer answer : answers) {
+            if (answer.getShoulderTiltCount() == null ||
+                    answer.getTurnLeftCount() == null ||
+                    answer.getTurnRightCount() == null ||
+                    answer.getSmileRatio() == null ||
+                    answer.getGazeDownCount() == null ||
+                    answer.getBlinksPerMinute() == null) {
+
+                // 예외 응답 처리
+                throw new AnswerHandler(ErrorStatus._ANSWER_FILED_IS_NULL);
+            }
+
             totalPostureScore += scorePosture(
                     answer.getShoulderTiltCount(),
                     answer.getTurnLeftCount(),
                     answer.getTurnRightCount());
+
             totalSmileScore += scoreSmile(answer.getSmileRatio());
             totalGazeScore += scoreGaze(answer.getGazeDownCount(), answer.getBlinksPerMinute());
+
             totalShoulderTiltCount += answer.getShoulderTiltCount();
             totalTurnLeftCount += answer.getTurnLeftCount();
             totalTurnRightCount += answer.getTurnRightCount();
         }
-
         int answerCount = answers.size();
 
         float avgPostureScore = totalPostureScore / answerCount;
@@ -76,7 +91,10 @@ public class ReportService {
         Interview updatedInterview = interview.updateNonverbalCommunicationReport(avgPostureScore, avgFacialScore, avgGazeScore,
                 avgShoulderTiltCount, avgTurnLeftCount, avgTurnRightCount, gazePointsList);
 
-        return ReportConverter.toNonverbalCommunicationReportDto(updatedInterview);
+        Combine combine = combineRepository.findById(interview.getCombineId())
+                .orElseThrow(() -> new CombineHandler(ErrorStatus._COMBINE_NOT_FOUND));
+
+        return ReportConverter.toNonverbalCommunicationReportDto(updatedInterview, combine);
     }
 
     float scoreGaze(int downCount, float blinksPerMinute) {
@@ -138,6 +156,15 @@ public class ReportService {
         int totalSpeedScore = 0;
 
         for (Answer answer : answers) {
+            if (answer.getHesitantScore() == null ||
+                    answer.getPitchMean() == null ||
+                    answer.getTurnRightCount() == null ||
+                    answer.getSpeakingSpeed() == null) {
+
+                // 예외 응답 처리
+                throw new AnswerHandler(ErrorStatus._ANSWER_FILED_IS_NULL);
+            }
+
             totalHesitantScore += answer.getHesitantScore();
             totalPitchScore += getPitchScore(answer.getPitchMean());
             totalSpeedScore += getSpeedScore(answer.getSpeakingSpeed());
@@ -164,7 +191,10 @@ public class ReportService {
         Interview updatedInterview = interview.updateTransmissionReport(avgHesitantScore, avgPitchScore, avgSpeedScore,
                 frequentlyUsedWords, hesitantList);
 
-        return ReportConverter.toTransmissionReportDto(updatedInterview);
+        Combine combine = combineRepository.findById(interview.getCombineId())
+                .orElseThrow(() -> new CombineHandler(ErrorStatus._COMBINE_NOT_FOUND));
+
+        return ReportConverter.toTransmissionReportDto(updatedInterview, combine);
     }
 
     // 톤 점수 계산

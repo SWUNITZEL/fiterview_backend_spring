@@ -38,34 +38,34 @@ public class Answer {
     private String blindRuleAdherence;
 
     @Field("smile_ratio")
-    private float smileRatio;
+    private Float smileRatio;
 
     @Field("gaze_down_count")
-    private int gazeDownCount;
+    private Integer gazeDownCount;
 
     @Field("gaze_points")
     private List<List<Integer>> gazePoints;
 
     @Field("blinks_per_minute")
-    private float blinksPerMinute;
+    private Float blinksPerMinute;
 
     @Field("shoulder_tilt_count")
-    private int shoulderTiltCount;
+    private Integer shoulderTiltCount;
 
     @Field("turn_left_count")
-    private int turnLeftCount;
+    private Integer turnLeftCount;
 
     @Field("turn_right_count")
-    private int turnRightCount;
+    private Integer turnRightCount;
 
     @Field("video_url")
     private String videoUrl;
 
     @Field("speaking_speed")
-    private float speakingSpeed;
+    private Float speakingSpeed;
 
     @Field("pitch_mean")
-    private float pitchMean;
+    private Float pitchMean;
 
     @Field("frequently_used_words")
     private List<Object> frequentlyUsedWords;
@@ -74,5 +74,5 @@ public class Answer {
     private List<String> hesitantList;
 
     @Field("hesitant_score")
-    private int hesitantScore;
+    private Integer hesitantScore;
 }

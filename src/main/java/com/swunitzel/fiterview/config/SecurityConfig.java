@@ -90,6 +90,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/login", "/", "/api/user/join", "/api/user/reissue").permitAll()
+                        .requestMatchers("/report/nonverbal-communication").permitAll()
                         .anyRequest().authenticated());
 
         // 필터 추가

@@ -22,7 +22,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _INTERVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW404", "인터뷰를 찾을 수 없습니다"),
 
     // answer 관련 오류
-    _ANSWER_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW404", "답변을 찾을 수 없습니다"),
+    _ANSWER_NOT_FOUND(HttpStatus.BAD_REQUEST, "ANSWER404", "답변을 찾을 수 없습니다"),
+    _ANSWER_FILED_IS_NULL(HttpStatus.BAD_REQUEST, "ANSWER405", "답변의 필드가 null입니다."),
+
+    // combine 관련 오류
+    _COMBINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMBINE404", "면접 조합을 찾을 수 없습니다"),
 
     ;
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReportDto {
@@ -30,6 +31,8 @@ public class ReportDto {
         private float avgTurnLeftCount;
         private float avgTurnRightCount;
         private List<List<List<Integer>>> gazePointList;
+        private LocalDateTime createdAt;
+        private String university;
 
     }
 
@@ -51,6 +54,8 @@ public class ReportDto {
         private TransmissionReportTotalScoreDto totalScore;
         private List<List<Object>> frequentlyUsedWords;
         private List<List<String>> hesitantList;
+        private LocalDateTime createdAt;
+        private String university;
 
     }
 }

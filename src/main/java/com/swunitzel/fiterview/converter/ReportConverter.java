@@ -1,17 +1,20 @@
 package com.swunitzel.fiterview.converter;
 
+import com.swunitzel.fiterview.domain.Combine;
 import com.swunitzel.fiterview.domain.Interview;
 import com.swunitzel.fiterview.dto.ReportDto;
 
 public class ReportConverter {
 
-    public static ReportDto.NonverbalCommunicationReportDto toNonverbalCommunicationReportDto(Interview interview) {
+    public static ReportDto.NonverbalCommunicationReportDto toNonverbalCommunicationReportDto(Interview interview, Combine combine) {
         return ReportDto.NonverbalCommunicationReportDto.builder()
                 .totalScore(toNonverbalCommunicationReportTotalScoreDto(interview))
                 .avgShoulderTiltCount(interview.getAvgShoulderTiltCount())
                 .avgTurnLeftCount(interview.getAvgTurnLeftCount())
                 .avgTurnRightCount(interview.getAvgTurnRightCount())
                 .gazePointList(interview.getGazePointsList())
+                .createdAt(interview.getCreatedAt())
+                .university(combine.getUniversity())
                 .build();
     }
 
@@ -23,11 +26,13 @@ public class ReportConverter {
                 .build();
     }
 
-    public static ReportDto.TransmissionReportDto toTransmissionReportDto(Interview interview) {
+    public static ReportDto.TransmissionReportDto toTransmissionReportDto(Interview interview, Combine combine) {
         return ReportDto.TransmissionReportDto.builder()
                 .totalScore(toTransmissionReportTotalScoreDto(interview))
                 .frequentlyUsedWords(interview.getFrequentlyUsedWords())
                 .hesitantList(interview.getHesitantList())
+                .createdAt(interview.getCreatedAt())
+                .university(combine.getUniversity())
                 .build();
     }
 
