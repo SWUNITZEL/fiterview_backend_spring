@@ -48,12 +48,25 @@ public class ReportService {
         int totalTurnRightCount = 0;
 
         for (Answer answer : answers) {
+            if (answer.getShoulderTiltCount() == null ||
+                    answer.getTurnLeftCount() == null ||
+                    answer.getTurnRightCount() == null ||
+                    answer.getSmileRatio() == null ||
+                    answer.getGazeDownCount() == null ||
+                    answer.getBlinksPerMinute() == null) {
+
+                // 예외 응답 처리
+                throw new AnswerHandler(ErrorStatus._ANSWER_FILED_IS_NULL);
+            }
+
             totalPostureScore += scorePosture(
                     answer.getShoulderTiltCount(),
                     answer.getTurnLeftCount(),
                     answer.getTurnRightCount());
+
             totalSmileScore += scoreSmile(answer.getSmileRatio());
             totalGazeScore += scoreGaze(answer.getGazeDownCount(), answer.getBlinksPerMinute());
+
             totalShoulderTiltCount += answer.getShoulderTiltCount();
             totalTurnLeftCount += answer.getTurnLeftCount();
             totalTurnRightCount += answer.getTurnRightCount();
@@ -143,6 +156,15 @@ public class ReportService {
         int totalSpeedScore = 0;
 
         for (Answer answer : answers) {
+            if (answer.getHesitantScore() == null ||
+                    answer.getPitchMean() == null ||
+                    answer.getTurnRightCount() == null ||
+                    answer.getSpeakingSpeed() == null) {
+
+                // 예외 응답 처리
+                throw new AnswerHandler(ErrorStatus._ANSWER_FILED_IS_NULL);
+            }
+
             totalHesitantScore += answer.getHesitantScore();
             totalPitchScore += getPitchScore(answer.getPitchMean());
             totalSpeedScore += getSpeedScore(answer.getSpeakingSpeed());
