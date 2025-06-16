@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.util.List;
 
 @Document(collection = "interview")
@@ -11,10 +12,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Interview {
+public class Interview extends BaseEntity{
 
     @Id
     private String id;
+
+    @Field("combine_id")
+    private String combineId;
 
     @Field("avg_posture_score")
     private float avgPostureScore;

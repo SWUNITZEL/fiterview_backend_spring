@@ -2,19 +2,21 @@ package com.swunitzel.fiterview.services;
 
 import com.swunitzel.fiterview.apiPayload.code.status.ErrorStatus;
 import com.swunitzel.fiterview.apiPayload.exception.handler.AnswerHandler;
+import com.swunitzel.fiterview.apiPayload.exception.handler.CombineHandler;
 import com.swunitzel.fiterview.apiPayload.exception.handler.InterviewHandler;
 import com.swunitzel.fiterview.converter.ReportConverter;
 import com.swunitzel.fiterview.domain.Answer;
+import com.swunitzel.fiterview.domain.Combine;
 import com.swunitzel.fiterview.domain.Interview;
 import com.swunitzel.fiterview.dto.ReportDto;
 import com.swunitzel.fiterview.repository.AnswerRepository;
+import com.swunitzel.fiterview.repository.CombineRepository;
 import com.swunitzel.fiterview.repository.InterviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +25,7 @@ public class ReportService {
 
     private final AnswerRepository answerRepository;
     private final InterviewRepository interviewRepository;
+    private final CombineRepository combineRepository;
 
     // 비언어적 커뮤니케이션 분석 결과 보고서
     @Transactional
@@ -55,7 +58,6 @@ public class ReportService {
             totalTurnLeftCount += answer.getTurnLeftCount();
             totalTurnRightCount += answer.getTurnRightCount();
         }
-
         int answerCount = answers.size();
 
         float avgPostureScore = totalPostureScore / answerCount;
@@ -76,7 +78,10 @@ public class ReportService {
         Interview updatedInterview = interview.updateNonverbalCommunicationReport(avgPostureScore, avgFacialScore, avgGazeScore,
                 avgShoulderTiltCount, avgTurnLeftCount, avgTurnRightCount, gazePointsList);
 
-        return ReportConverter.toNonverbalCommunicationReportDto(updatedInterview);
+        Combine combine = combineRepository.findById(interview.getCombineId())
+                .orElseThrow(() -> new CombineHandler(ErrorStatus._COMBINE_NOT_FOUND));
+
+        return ReportConverter.toNonverbalCommunicationReportDto(updatedInterview, combine);
     }
 
     float scoreGaze(int downCount, float blinksPerMinute) {
@@ -164,7 +169,10 @@ public class ReportService {
         Interview updatedInterview = interview.updateTransmissionReport(avgHesitantScore, avgPitchScore, avgSpeedScore,
                 frequentlyUsedWords, hesitantList);
 
-        return ReportConverter.toTransmissionReportDto(updatedInterview);
+        Combine combine = combineRepository.findById(interview.getCombineId())
+                .orElseThrow(() -> new CombineHandler(ErrorStatus._COMBINE_NOT_FOUND));
+
+        return ReportConverter.toTransmissionReportDto(updatedInterview, combine);
     }
 
     // 톤 점수 계산
