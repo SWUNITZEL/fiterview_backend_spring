@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
-import java.util.Objects;
 
 
 @Document(collection = "answers")
@@ -44,7 +43,7 @@ public class Answer {
     private Integer gazeDownCount;
 
     @Field("gaze_points")
-    private List<List<Integer>> gazePoints;
+    private List<GazePoint> gazePoints;
 
     @Field("blinks_per_minute")
     private Float blinksPerMinute;

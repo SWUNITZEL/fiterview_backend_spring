@@ -7,6 +7,7 @@ import com.swunitzel.fiterview.apiPayload.exception.handler.InterviewHandler;
 import com.swunitzel.fiterview.converter.ReportConverter;
 import com.swunitzel.fiterview.domain.Answer;
 import com.swunitzel.fiterview.domain.Combine;
+import com.swunitzel.fiterview.domain.GazePoint;
 import com.swunitzel.fiterview.domain.Interview;
 import com.swunitzel.fiterview.dto.ReportDto;
 import com.swunitzel.fiterview.repository.AnswerRepository;
@@ -80,7 +81,7 @@ public class ReportService {
         float avgTurnLeftCount = totalTurnLeftCount / answerCount;
         float avgTurnRightCount = totalTurnRightCount / answerCount;
 
-        List<List<List<Integer>>> gazePointsList = answers.stream()
+        List<List<GazePoint>> gazePointsList = answers.stream()
                 .map(Answer::getGazePoints)
                 .collect(Collectors.toList());
 

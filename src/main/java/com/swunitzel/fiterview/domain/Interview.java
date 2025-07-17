@@ -39,7 +39,7 @@ public class Interview extends BaseEntity{
     private float avgTurnRightCount;
 
     @Field("gaze_points_list")
-    private List<List<List<Integer>>> gazePointsList;
+    private List<List<GazePoint>> gazePointsList;
 
     @Field("avg_hesitant_Score")
     private float avgHesitantScore;
@@ -57,7 +57,7 @@ public class Interview extends BaseEntity{
     private List<List<String>> hesitantList;
 
     public Interview updateNonverbalCommunicationReport(float avgPostureScore, float avgFacialScore, float avgGazeScore,
-                                      float avgShoulderTiltCount, float avgTurnLeftCount, float avgTurnRightCount, List<List<List<Integer>>> gazePointsList) {
+                                      float avgShoulderTiltCount, float avgTurnLeftCount, float avgTurnRightCount, List<List<GazePoint>> gazePointsList) {
         this.avgPostureScore = avgPostureScore;
         this.avgFacialScore = avgFacialScore;
         this.avgGazeScore = avgGazeScore;
