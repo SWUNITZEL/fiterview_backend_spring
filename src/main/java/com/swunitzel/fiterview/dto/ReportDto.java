@@ -14,6 +14,17 @@ public class ReportDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class GazePointsDto{
+        private Integer x;
+        private Integer y;
+        private LocalDateTime time;
+
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class NonverbalCommunicationReportTotalScoreDto{
         private float avgPostureScore;
         private float avgFacialScore;
@@ -30,7 +41,7 @@ public class ReportDto {
         private float avgShoulderTiltCount;
         private float avgTurnLeftCount;
         private float avgTurnRightCount;
-        private List<List<List<Integer>>> gazePointList;
+        private List<List<GazePointsDto>> gazePointList;
         private LocalDateTime createdAt;
         private String university;
 
