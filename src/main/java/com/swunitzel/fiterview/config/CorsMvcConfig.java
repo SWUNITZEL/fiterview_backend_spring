@@ -6,10 +6,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsMvcConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
-
         corsRegistry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000");           // 테스트를 위해 모든 경로에서 접근 허용
+                .allowedOrigins(
+                        "http://localhost:3000",           // 개발용
+                        "https://www.fiterview.site",      // 프론트엔드 도메인
+                        "https://fiterview.site"           // www 없는 도메인도 추가
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);  // 쿠키/인증 정보 허용
     }
 }
