@@ -60,7 +60,9 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
                         configuration.setAllowedOrigins(Arrays.asList(
-                                "http://localhost:3000"
+                                "http://localhost:3000",
+                                "https://www.fiterview.site", // 프론트엔드 도메인
+                                "https://fiterview.site"
                         ));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
