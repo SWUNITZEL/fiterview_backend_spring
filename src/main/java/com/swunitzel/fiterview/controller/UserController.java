@@ -1,7 +1,8 @@
 package com.swunitzel.fiterview.controller;
 
+import com.swunitzel.fiterview.apiPayload.ApiResponse;
 import com.swunitzel.fiterview.dto.JoinDto;
-import com.swunitzel.fiterview.dto.TokenPairsDto;
+import com.swunitzel.fiterview.dto.TokenDto;
 import com.swunitzel.fiterview.dto.UserDto;
 import com.swunitzel.fiterview.jwt.CustomUserDetails;
 import com.swunitzel.fiterview.services.UserService;
@@ -20,15 +21,9 @@ public class UserController {
 
     @PostMapping("/join")
     @ResponseBody
-    public ResponseEntity<String> join(@RequestBody JoinDto joinDto) {
-        try {
-            userService.join(joinDto);
-            return ResponseEntity.ok("ok");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body( e.getMessage());
-        }
+    public ApiResponse<String> join(@RequestBody JoinDto joinDto) {
+        userService.updateUser(joinDto);
+        return ApiResponse.onSuccess("ok");
     }
 
     @PostMapping("/reissue")
@@ -44,7 +39,7 @@ public class UserController {
         try{
             if (userService.validateRefreshToken(refresh)) {
 
-                TokenPairsDto tokenPairsDto = userService.reissueToken(refresh);
+                TokenDto.TokenPairsDto tokenPairsDto = userService.reissueToken(refresh);
                 return ResponseEntity.ok(tokenPairsDto);
             } else {
                 return new ResponseEntity<>("invalid refresh token", HttpStatus.UNAUTHORIZED);

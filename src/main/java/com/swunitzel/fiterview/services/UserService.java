@@ -1,36 +1,34 @@
 package com.swunitzel.fiterview.services;
 
-import com.swunitzel.fiterview.domain.SchoolRecord;
+import com.swunitzel.fiterview.apiPayload.code.status.ErrorStatus;
+import com.swunitzel.fiterview.apiPayload.exception.handler.UserHandler;
 import com.swunitzel.fiterview.domain.User;
-import com.swunitzel.fiterview.domain.enums.Gender;
+import com.swunitzel.fiterview.domain.enums.Role;
 import com.swunitzel.fiterview.dto.JoinDto;
-import com.swunitzel.fiterview.dto.TokenPairsDto;
+import com.swunitzel.fiterview.dto.TokenDto;
 import com.swunitzel.fiterview.dto.UserDto;
 import com.swunitzel.fiterview.jwt.JWTUtil;
 import com.swunitzel.fiterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
     private final SchoolRecordService schoolRecordService;
 
-    // 회원가입
-    public void join(JoinDto joinDTO) {
-        if (userRepository.existsByEmail(joinDTO.getEmail())) {
-            throw new IllegalArgumentException("email already exist");
+    @Transactional
+    public void updateUser(JoinDto joinDto) {
+        User user = userRepository.findByEmail(joinDto.getEmail());
+        if (user == null) {
+            throw new UserHandler(ErrorStatus._USER_NOT_FOUND);
         }
 
-        // 비밀번호 인코딩
-        joinDTO.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
-        User user = new User(joinDTO);
-
+        user.updateUser(joinDto, Role.USER);
         userRepository.save(user);
     }
 
@@ -45,7 +43,7 @@ public class UserService {
 
 
     // refresh 토큰 갱신
-    public TokenPairsDto reissueToken(String refresh) {
+    public TokenDto.TokenPairsDto reissueToken(String refresh) {
 
         User user = userRepository.findByEmail(jwtUtil.getEmail(refresh));
         if (user == null || !user.getRefresh().equals(refresh)) {
@@ -56,8 +54,18 @@ public class UserService {
 
         String newAccessToken = jwtUtil.createJwt("access", jwtUtil.getEmail(refresh));
 
-        return new TokenPairsDto(newAccessToken, refresh);
+        return TokenDto.TokenPairsDto.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(refresh)
+                .build();
 
+    }
+
+    // refresh 토큰 저장
+    @Transactional
+    public void updateRefresh(String email, String refreshToken) {
+        User user = userRepository.findByEmail(email);
+        user.updateRefresh(refreshToken);
     }
 
     public UserDto getUserData(String email) {
