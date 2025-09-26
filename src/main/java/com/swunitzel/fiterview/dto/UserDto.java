@@ -1,10 +1,13 @@
 package com.swunitzel.fiterview.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@Getter
+@NoArgsConstructor
+@Getter @Builder
 public class UserDto {
 
     private String name;

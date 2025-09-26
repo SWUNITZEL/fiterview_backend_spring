@@ -3,7 +3,7 @@ package com.swunitzel.fiterview.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swunitzel.fiterview.domain.User;
 import com.swunitzel.fiterview.dto.LoginDto;
-import com.swunitzel.fiterview.dto.TokenPairsDto;
+import com.swunitzel.fiterview.dto.TokenDto;
 import com.swunitzel.fiterview.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -79,7 +79,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if (saveRefresh(email, refresh)){
             try{
                 // DTO 생성 및 JSON 직렬화
-                TokenPairsDto tokenPair = new TokenPairsDto(access, refresh);
+                TokenDto.TokenPairsDto tokenPair = TokenDto.TokenPairsDto.builder()
+                        .accessToken(access)
+                        .refreshToken(refresh)
+                        .build();
                 String jsonResponse = new ObjectMapper().writeValueAsString(tokenPair);
 
                 response.getWriter().write(jsonResponse);

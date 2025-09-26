@@ -3,8 +3,12 @@ package com.swunitzel.fiterview.config;
 import com.swunitzel.fiterview.jwt.JWTFilter;
 import com.swunitzel.fiterview.jwt.JWTUtil;
 import com.swunitzel.fiterview.jwt.LoginFilter;
+import com.swunitzel.fiterview.oauth.CustomOAuth2UserService;
+import com.swunitzel.fiterview.oauth.OAuth2LoginFailureHandler;
+import com.swunitzel.fiterview.oauth.OAuth2SuccessHandler;
 import com.swunitzel.fiterview.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,29 +27,21 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, UserRepository userRepository) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
-    }
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     //AuthenticationManager Bean 등록
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-
-        return new BCryptPasswordEncoder();
     }
 
 
@@ -91,8 +87,19 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/user/login", "/", "/api/user/join", "/api/user/reissue").permitAll()
-                        .anyRequest().authenticated());
+                        .requestMatchers("/login/**", "/", "/api/user/join", "/api/user/reissue",
+                                 "/oauth/login/kakao/**", "/api/user/auth/**"
+//                                , "/oauth2"
+                        ).permitAll()
+
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth ->
+                        oauth
+//                                .loginPage("/oauth2/authorization/kakao")
+                                .userInfoEndpoint(c -> c.userService(customOAuth2UserService))
+                                .successHandler(oAuth2SuccessHandler)
+                                .failureHandler(oAuth2LoginFailureHandler)
+                );
 
         // 필터 추가
         http

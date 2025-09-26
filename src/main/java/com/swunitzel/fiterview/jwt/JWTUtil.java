@@ -1,7 +1,6 @@
 package com.swunitzel.fiterview.jwt;
 
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +36,7 @@ public class JWTUtil {
 
     public String createJwt(String category, String email) {
 
-        Long expiredMs  = category.equals("access") ? 7200000L : 86400000L;
+        Long expiredMs  = category.equals("access") ? 20 * 24 * 60 * 60 * 1000 : 86400000L;
 
         return Jwts.builder()
                 .claim("category", category)
