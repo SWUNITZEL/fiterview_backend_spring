@@ -88,7 +88,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login/**", "/", "/api/user/join", "/api/user/reissue",
-                                 "/oauth/login/kakao/**", "/api/user/auth/**"
+                                 "/oauth/login/kakao/**", "/api/user/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**"
 //                                , "/oauth2"
                         ).permitAll()
 
