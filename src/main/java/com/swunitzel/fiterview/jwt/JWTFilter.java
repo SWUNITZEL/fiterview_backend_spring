@@ -30,6 +30,10 @@ public class JWTFilter extends OncePerRequestFilter {
         return path.startsWith("/api/user/join")
                 || path.startsWith("/api/user/reissue")
                 || path.startsWith("/api/user/auth")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/api/user/login")
+
+                || path.startsWith("/v3/api-docs")
                 || path.startsWith("/login/oauth2/code/**");
     }
 
