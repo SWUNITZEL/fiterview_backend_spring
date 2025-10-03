@@ -67,6 +67,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             response.getWriter().write(objectMapper.writeValueAsString(oauth2ResponseDto));
 
             userService.updateRefresh(oAuth2User.getEmail(), refreshToken);
+            response.sendRedirect("https://fiterview.site/auth/callback");
 
         } catch(Exception e){
             throw new AuthHandler(ErrorStatus._KAKAO_OAUTH_SERVER_ERROR);
