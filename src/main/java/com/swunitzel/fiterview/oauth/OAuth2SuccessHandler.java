@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -39,35 +40,20 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             String accessToken = jwtUtil.createJwt("access", email);
             String refreshToken = jwtUtil.createJwt("refresh",  email);
 
-            System.out.println("accessToken: " + accessToken);
-            System.out.println("refreshToken: " + refreshToken);
-
-            TokenDto.Oauth2ResponseDto oauth2ResponseDto;
-
-            // 최초 OAuth 로그인 시 Guest
-            if(oAuth2User.getRole() == Role.GUEST){
-                oauth2ResponseDto = TokenDto.Oauth2ResponseDto.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .email(email)
-                        .role(Role.GUEST)
-                        .build();
-
-            } else {
-                oauth2ResponseDto = TokenDto.Oauth2ResponseDto.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .email(email)
-                        .role(Role.USER)
-                        .build();
-            }
-
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(oauth2ResponseDto));
 
             userService.updateRefresh(oAuth2User.getEmail(), refreshToken);
-            response.sendRedirect("https://fiterview.site/auth/callback");
+
+            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/#/auth/callback")
+                    .queryParam("accessToken", accessToken)
+                    .queryParam("refreshToken", refreshToken)
+                    .queryParam("role", oAuth2User.getRole().name())
+                    .build()
+                    .toUriString();
+
+
+            response.sendRedirect(targetUrl);
 
         } catch(Exception e){
             throw new AuthHandler(ErrorStatus._KAKAO_OAUTH_SERVER_ERROR);
