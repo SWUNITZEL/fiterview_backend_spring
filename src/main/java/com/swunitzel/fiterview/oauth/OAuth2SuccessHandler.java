@@ -42,7 +42,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
             userService.updateRefresh(oAuth2User.getEmail(), refreshToken);
 
-            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/auth/callback")
+            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/#/auth/callback")
                     .queryParam("accessToken", accessToken)
                     .queryParam("refreshToken", refreshToken)
                     .queryParam("email", email)
