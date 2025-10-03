@@ -13,8 +13,6 @@ import java.time.LocalDate;
 public class JoinDto {
     private String email;
 
-    private String password;
-
     private String name;
 
     private LocalDate birth;

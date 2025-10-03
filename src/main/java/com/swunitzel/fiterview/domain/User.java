@@ -42,7 +42,6 @@ public class User extends BaseEntity {
 
     public  User(JoinDto joinDto, Role role) {
         this.email = joinDto.getEmail();
-        this.password = joinDto.getPassword();
         this.name = joinDto.getName();
         this.birth = joinDto.getBirth();
         this.gender = joinDto.getGender();

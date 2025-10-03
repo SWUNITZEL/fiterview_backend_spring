@@ -3,8 +3,6 @@ package com.swunitzel.fiterview.oauth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swunitzel.fiterview.apiPayload.code.status.ErrorStatus;
 import com.swunitzel.fiterview.apiPayload.exception.handler.AuthHandler;
-import com.swunitzel.fiterview.domain.enums.Role;
-import com.swunitzel.fiterview.dto.TokenDto;
 import com.swunitzel.fiterview.jwt.JWTUtil;
 import com.swunitzel.fiterview.services.UserService;
 import jakarta.servlet.ServletException;
@@ -25,7 +23,6 @@ import java.io.IOException;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final UserService userService;
 
     @Override
@@ -45,9 +42,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
             userService.updateRefresh(oAuth2User.getEmail(), refreshToken);
 
-            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/#/auth/callback")
+            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/auth/callback")
                     .queryParam("accessToken", accessToken)
                     .queryParam("refreshToken", refreshToken)
+                    .queryParam("email", email)
                     .queryParam("role", oAuth2User.getRole().name())
                     .build()
                     .toUriString();
