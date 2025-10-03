@@ -27,8 +27,6 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes of(String provider, String userNameAttributeName, Map<String, Object> attributes) {
-        log.info("Extracting OAuthAttributes for socialType: {}", provider);
-        log.info("attributes :: {}", attributes);
         if (provider.equals("kakao")) {
             return ofKakao(userNameAttributeName, attributes);
         } else{
