@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,13 +38,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             // Access Token과 Refresh Token 생성
             String accessToken = jwtUtil.createJwt("access", email);
             String refreshToken = jwtUtil.createJwt("refresh",  email);
+            System.out.println(accessToken);
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
             userService.updateRefresh(oAuth2User.getEmail(), refreshToken);
 
-            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/#/auth/callback")
+            String targetUrl = UriComponentsBuilder.fromUriString("https://fiterview.site/auth/callback")
                     .queryParam("accessToken", accessToken)
                     .queryParam("refreshToken", refreshToken)
                     .queryParam("email", email)
