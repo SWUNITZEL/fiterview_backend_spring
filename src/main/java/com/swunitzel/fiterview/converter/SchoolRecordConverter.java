@@ -11,6 +11,8 @@ public class SchoolRecordConverter {
                 .explanation(schoolRecord.getExplanation())
                 .hashtags(schoolRecord.getHashtags())
                 .type(schoolRecord.getType())
+                .advice(schoolRecord.getAdvice())
+                .recommendedMajor(schoolRecord.getRecommendedMajor())
                 .build();
     }
 }
