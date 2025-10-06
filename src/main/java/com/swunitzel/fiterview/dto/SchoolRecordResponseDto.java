@@ -22,5 +22,9 @@ public class SchoolRecordResponseDto {
         private List<String> hashtags;
 
         private String explanation;
+
+        private List<String> recommendedMajor;
+
+        private String advice;
     }
 }

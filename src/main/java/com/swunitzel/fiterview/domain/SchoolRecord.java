@@ -33,4 +33,9 @@ public class SchoolRecord {
 
     private String explanation;
 
+    private String advice;
+
+    @Field("recommended_major")
+    private List<String> recommendedMajor;
+
 }
