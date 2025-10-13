@@ -62,6 +62,8 @@ public class UserController {
         try {
             UserDto userDto = userService.getUserData(userDetails.getUsername());
             return ResponseEntity.ok(userDto);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>("GUEST 유저는 접근할 수 없습니다.", HttpStatus.FORBIDDEN);
         } catch (RuntimeException e) {
             return new ResponseEntity<>("user is null", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
