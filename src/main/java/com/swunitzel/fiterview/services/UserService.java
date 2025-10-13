@@ -1,6 +1,7 @@
 package com.swunitzel.fiterview.services;
 
 import com.swunitzel.fiterview.apiPayload.code.status.ErrorStatus;
+import com.swunitzel.fiterview.apiPayload.exception.handler.AnswerHandler;
 import com.swunitzel.fiterview.apiPayload.exception.handler.UserHandler;
 import com.swunitzel.fiterview.domain.User;
 import com.swunitzel.fiterview.domain.enums.Role;
@@ -73,6 +74,10 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new RuntimeException();
+        }
+
+        if (user.getRole() == Role.GUEST) {
+            throw new IllegalStateException();
         }
 
         String schoolRecordId = schoolRecordService.getSchoolRecordId(email);
