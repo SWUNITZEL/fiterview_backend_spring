@@ -13,7 +13,8 @@ public class CorsMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:3000",           // 개발용
                         "https://www.fiterview.site",      // 프론트엔드 도메인
-                        "https://fiterview.site"           // www 없는 도메인도 추가
+                        "https://fiterview.site",           // www 없는 도메인도 추가
+                        "https://localhost:3000"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
