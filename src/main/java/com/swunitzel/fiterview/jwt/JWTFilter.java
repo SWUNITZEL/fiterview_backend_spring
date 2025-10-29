@@ -41,8 +41,6 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        System.out.println("JWTFilter: doFilterInternal");
-        System.out.println("request.getRequestURI(): " + request.getRequestURI());
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = resolveToken(request);
 
